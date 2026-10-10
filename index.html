@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Library - Sistema Inteligente de Gestión Bibliotecaria</title>
+  <meta name="description" content="Plataforma moderna para la gestión ágil de catálogos, socios y préstamos bibliotecarios. Diseñado bajo estándares de desarrollo guiado por especificación (SDD).">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --secondary: #0f172a;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --bg-light: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
+      background-color: var(--bg-light);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--secondary);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .brand svg {
+      width: 32px;
+      height: 32px;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .badge-adso {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 5rem 0 4rem;
+      text-align: center;
+    }
+
+    .hero-tagline {
+      display: inline-block;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 0.35rem 1rem;
+      border-radius: 2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--secondary);
+      max-width: 850px;
+      margin: 0 auto 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Stats Grid */
+    .stats-section {
+      background: #ffffff;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 5rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 650px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+      border-color: #cbd5e1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.75rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Architecture Highlights */
+    .tech-spec {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 5rem 0;
+      border-radius: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    .tech-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+    }
+
+    .tech-item h4 {
+      color: #60a5fa;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tech-item p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 0 2rem;
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hero {
+        padding: 3.5rem 0 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container">
+      <nav class="nav-bar">
+        <a href="#" class="brand">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <span>Manager Library</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#funciones">Funcionalidades</a></li>
+          <li><a href="#arquitectura">Especificación SDD</a></li>
+          <li><a href="#reglas">Reglas de Negocio</a></li>
+          <li><span class="badge-adso">ADSO Ficha 3413974</span></li>
+        </ul>
+        <a href="#contacto" class="btn btn-primary">Feria del Proyecto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero-tagline">Desarrollo Guiado por Especificación (SDD)</span>
+      <h1>Gestión Integral y Control Preciso para <span>Bibliotecas Modernas</span></h1>
+      <p>
+        Plataforma robusta diseñada para coordinar catálogos bibliográficos, socios lectores, préstamos concurrentes y métricas de circulación en tiempo real.
+      </p>
+      <div class="hero-actions">
+        <a href="#funciones" class="btn btn-primary">Explorar Módulos</a>
+        <a href="#arquitectura" class="btn btn-secondary">Ver Arquitectura</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>14 Días</h3>
+          <p>Plazo estricto de préstamo</p>
+        </div>
+        <div class="stat-card">
+          <h3>3 Libros</h3>
+          <p>Máximo sin devolver por socio</p>
+        </div>
+        <div class="stat-card">
+          <h3>5 Categorías</h3>
+          <p>Clasificación inmutable del acervo</p>
+        </div>
+        <div class="stat-card">
+          <h3>&lt; 300 ms</h3>
+          <p>Tiempo de respuesta en búsquedas</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Features -->
+  <section class="features" id="funciones">
+    <div class="container">
+      <div class="section-header">
+        <h2>Capacidades del Sistema</h2>
+        <p>Una arquitectura sólida que resuelve las necesidades cotidianas del bibliotecario con integridad transaccional.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <h3>Catálogo con Baja Lógica</h3>
+          <p>Administración de libros con ISBN de 13 dígitos único, control estricto de ejemplares disponibles y preservación histórica sin borrado físico.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3>Préstamos Transaccionales</h3>
+          <p>Registro de 1 a 3 libros por operación con descuento atómico de inventario. Control optimista de concurrencia para evitar sobre-préstamos.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3>Gestión de Socios Lectores</h3>
+          <p>Registro y consulta inmediata mediante documento de identidad único. Bloqueo automático si el socio registra ejemplares en estado de mora.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3>Devoluciones Línea por Línea</h3>
+          <p>Restitución unitaria e idempotente de ejemplares en stock. Cálculo dinámico del estado del préstamo: abierto, vencido o cerrado.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3>Métricas y Reportes Congelados</h3>
+          <p>Consolidación de los libros más solicitados agrupados por datos inmutables del momento del préstamo, garantizando estabilidad contable.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3>Seguridad y Roles (RBAC)</h3>
+          <p>Autenticación basada en Bearer JWT con rotación cada 8 horas. Políticas diferenciadas para Administradores y Bibliotecarios sin exponer credenciales.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Spec Summary -->
+  <section class="container" id="arquitectura">
+    <div class="tech-spec">
+      <div class="container">
+        <h2 style="font-size: 2rem; font-weight: 800; text-align: center;">Arquitectura y Especificación Técnica</h2>
+        <p style="text-align: center; color: #94a3b8; max-width: 600px; margin: 0.5rem auto 0;">Diseño bajo principios de Arquitectura Hexagonal y Spec-Driven Development (SDD).</p>
+
+        <div class="tech-grid">
+          <div class="tech-item">
+            <h4>Backend (API)</h4>
+            <p>PHP 8.4 + Laravel. Arquitectura orientada a dominio, puertos y adaptadores. PostgreSQL 16 con verificación de restricciones en motor.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Frontend (SPA)</h4>
+            <p>React con Vite. Interfaz reactiva, consumo de contratos RESTful normalizados y manejo intuitivo de operaciones de préstamo.</p>
+          </div>
+          <div class="tech-item">
+            <h4>Infraestructura</h4>
+            <p>Docker & Docker Compose con inicialización en un solo comando. Motor relacional sin esquemas precreados (propiedad de migraciones).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contacto">
+    <div class="container">
+      <div class="footer-content">
+        <div>
+          <strong>Manager Library</strong> &copy; 2026. Todos los derechos reservados.
+        </div>
+        <div>
+          <span>Servicio Nacional de Aprendizaje (SENA) &bull; Centro de Teleinformática y Producción Industrial</span>
+        </div>
+        <div>
+          <span class="badge-adso">ADSO Ficha 3413974</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
+
